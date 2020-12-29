@@ -1,0 +1,283 @@
+import sys
+
+class Board:
+
+    def __init__(self):
+        self.pieces = [[None for i in range(8)] for j in range(8)]
+
+    def __str__(self):
+        s = ""
+        for j in range(7, -1, -1):
+            for i in range(8):
+                if self.pieces[j][i] is None:
+                    s += "."
+                else:
+                    s += self.pieces[j][i].get_symbol()
+            s += "\n"
+        return s
+
+    def move_piece(self, move_number, move_from, move_to):
+        from_col = ord(move_from[0]) - ord('a')
+        from_row = int(move_from[1]) - 1
+        to_col = ord(move_to[0]) - ord('a')
+        to_row = int(move_to[1]) - 1
+        piece = self.pieces[from_row][from_col]
+        if piece is None:
+            print("Error: the initial cell of the move is empty!")
+            exit(1)
+        if self.pieces[to_row][to_col] is not None:
+            to_piece = self.pieces[to_row][to_col]
+            if piece.is_white == to_piece.is_white:
+                print("Error: destination is occupied by a piece of the same color!")
+                exit(1)
+        if piece.is_move_legal(to_row, to_col):
+            self.pieces[to_row][to_col] = piece
+            self.pieces[from_row][from_col] = None
+            piece.relocate(to_row, to_col)
+        else:
+            print("Error: incorrect move of the piece!")
+            print("Move number: " + str(move_number))
+            print("Piece color: " + str(piece.color_name()))
+            print("Piece name: " + str(piece.piece_name()))
+            exit(1)
+
+
+class Piece:
+
+    def relocate(self, to_row, to_col):
+        self.row = to_row
+        self.col = to_col
+
+    def __init__(self, board, row, col, is_white):
+        self.relocate(row, col)
+        self.is_white = is_white
+        board.pieces[row][col] = self
+
+    def is_move_legal(self, to_row, to_col):
+        return True
+
+    def color_name(self):
+        if self.is_white:
+            return "white"
+        else:
+            return "black"
+
+#Checking for Rook Legal move
+
+class Rook(Piece):
+
+    def __init__(self, board, row, col, is_white):
+        Piece.__init__(self, board, row, col, is_white)
+
+    def is_move_legal(self, to_row, to_col):
+        print("Searching for legal Rook moves")
+        if to_row == self.row and to_col != self.col:
+            return True
+        elif to_row != self.row and to_col == self.col:
+            return True
+        else:
+            print("Not legal Rook move")
+            return False
+
+    def get_symbol(self):
+        if self.is_white:
+            return '\u2656'
+        else:
+            return '\u265C'
+
+    def piece_name(self):
+        return "Rook"
+
+#Checking for Knight Legal move
+
+class Knight(Piece):
+
+    def __init__(self, board, row, col, is_white):
+        Piece.__init__(self, board, row, col, is_white)
+
+    def is_move_legal(self, to_row, to_col):
+        print("Searching for Knight legal moves")
+        
+        if to_row == (self.row + 2) and to_col == (self.col + 1):
+            return True
+        elif to_row == (self.row + 2) and to_col == (self.col - 1):
+            return True
+        
+        elif to_row == (self.row + 1) and to_col == (self.col - 2):
+            return True
+        elif to_row == (self.row - 1) and to_col == (self.col - 2):
+            return True
+        
+        elif to_row == (self.row + 1) and to_col == (self.col + 2):
+            return True
+        elif to_row == (self.row - 1) and to_col == (self.col + 2):
+            return True
+        
+        elif to_row == (self.row - 2) and to_col == (self.col + 1):
+            return True
+        elif to_row == (self.row - 2) and to_col == (self.col - 1):
+            return True
+
+        else:
+            return False
+
+    def get_symbol(self):
+        if self.is_white:
+            return '\u2658'
+        else:
+            return '\u265E'
+
+    def piece_name(self):
+        return "Knight"
+
+#Checking for Bishop Legal move
+
+class Bishop(Piece):
+
+    def __init__(self, board, row, col, is_white):
+        Piece.__init__(self, board, row, col, is_white)
+
+    def is_move_legal(self, to_row, to_col):
+        print("Searching for  Bishop's legal moves")
+        for i in range(8):
+            
+            if to_row == (self.row + i) and to_col == (self.col - i):
+                return True
+            
+            elif to_row == (self.row + i) and to_col == (self.col + i):
+                return True
+            
+            elif to_row == (self.row - i) and to_col == (self.col - i):
+                return True
+            
+            elif to_row == (self.row - i) and to_col == (self.col + i):
+                return True
+        return False
+
+    def get_symbol(self):
+        if self.is_white:
+            return '\u2657'
+        else:
+            return '\u265D'
+
+    def piece_name(self):
+        return "Bishop"
+
+#Checking for Queen Legal move
+
+class Queen(Piece):
+
+    def __init__(self, board, row, col, is_white):
+        Piece.__init__(self, board, row, col, is_white)
+
+    def is_move_legal(self, to_row, to_col):
+        print("Searching for  Queen's legal moves")
+        
+        if to_row == self.row and to_col != self.row:
+            return True
+        
+        elif to_row != self.row and to_col == self.col:
+            return True
+
+        for i in range(8):
+           
+            if to_row == (self.row - i) and to_col == (self.col - i):
+                return True
+           
+            elif to_row == (self.row - i) and to_col == (self.col + i):
+                return True
+            elif to_row == (self.row + i) and to_col == (self.col - i):
+                return True
+            elif to_row == (self.row + i) and to_col == (self.col + i):
+                return True
+
+        return False
+
+    def get_symbol(self):
+        if self.is_white:
+            return '\u2655'
+        else:
+            return '\u265B'
+
+    def piece_name(self):
+        return "Queen"
+
+#Checking for Kings Legal move
+class King(Piece):
+
+    def __init__(self, board, row, col, is_white):
+        Piece.__init__(self, board, row, col, is_white)
+
+    def get_symbol(self):
+        if self.is_white:
+            return '\u2654'
+        else:
+            return '\u265A'
+
+    def piece_name(self):
+        return "King"
+
+    def is_move_legal(self, to_row, to_col):
+        print("Searching for King's legal move")
+        return (abs(to_row - self.row) <= 1) and (abs(to_col - self.col) <= 1)
+
+#Pawn implementation not required for this assignment 
+
+class Pawn(Piece):
+
+    def __init__(self, board, row, col, is_white):
+        Piece.__init__(self, board, row, col, is_white)
+
+    def is_move_legal(self, to_row, to_col):
+        return True
+
+    def get_symbol(self):
+        if self.is_white:
+            return '\u2659'
+        else:
+            return '\u265F'
+
+    def piece_name(self):
+        return "Pawn"
+
+
+def new_game():
+    board = Board()
+    Rook(board, 0, 0, True)
+    Rook(board, 0, 7, True)
+    Rook(board, 7, 0, False)
+    Rook(board, 7, 7, False)
+    Knight(board, 0, 1, True)
+    Knight(board, 0, 6, True)
+    Knight(board, 7, 1, False)
+    Knight(board, 7, 6, False)
+    Bishop(board, 0, 2, True)
+    Bishop(board, 0, 5, True)
+    Bishop(board, 7, 2, False)
+    Bishop(board, 7, 5, False)
+    Queen(board, 0, 3, True)
+    Queen(board, 7, 3, False)
+    King(board, 0, 4, True)
+    King(board, 7, 4, False)
+    for i in range(8):
+        Pawn(board, 1, i, True)
+        Pawn(board, 6, i, False)
+    return board
+
+
+#implementation of the board 
+if __name__ == "__main__":
+    board = new_game()
+    with open(sys.argv[1], "r") as f:
+        move_number = 0
+        while True:
+            s = f.readline()
+            if s == "":
+                break
+            move_number += 1
+            moves = s.split()
+            for move in moves:
+                move_from, move_to = move.split("-")
+                board.move_piece(move_number, move_from, move_to)
+        f.close()
+        print(str(board))
