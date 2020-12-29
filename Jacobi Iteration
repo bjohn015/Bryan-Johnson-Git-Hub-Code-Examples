@@ -1,0 +1,84 @@
+/*
+    Jacboi Iteration SOLVER
+    C++
+    CS 417 Jay Morris
+    Bryan Johnson
+*/
+#include<iostream>
+#include <iostream>
+#include <fstream>
+#include <cmath>
+
+using namespace std;
+
+int main(){
+
+  int error = .000001;
+  double **A;
+  double *b;
+  double *x;
+
+
+  int N;
+  fstream fin;
+  fin.open("q8.txt",ios::in);
+  fin>>N;
+
+  b=new double[N];
+  x=new double[N];
+  for(int i=0;i<N;i++)
+
+  {
+    b[i]=x[i]=0.0;
+  }
+
+  A = new double*[N];
+
+  for (int i=0;i<N;i++)
+  {
+    A[i]=new double [N];
+
+  }
+  for(int row=0;row<N;row++)
+  {
+    for(int col=0;col<N;col++)
+    {
+      fin>>A[row][col];
+    }
+  }
+    for (int i=0;i<N;i++)
+  {
+    fin>>b[i];
+  }
+
+  fin.close();
+
+    /// number of times Jacboi is iterated for better results
+   int iteration=256;
+   int it=0;
+   while(it<iteration){
+     for(int i=0;i<N;i++){
+       double sum=0;
+       for(int j=0;j<N;j++){
+	 if(j==i)continue;
+	 sum+=A[i][j]*x[j]-b[i];
+       }
+       sum=(-1/A[i][i])*sum;
+       x[i]=sum;
+     }
+     it++;
+   }
+
+   ofstream file;
+   file.open("q8solution.txt");
+   int i=0;
+   while (i<N){
+     for(int j=0;j<sqrt(N);j++){
+       file<<x[i++]<<" ";
+     }
+     file<<endl;
+   }
+
+   file.close();
+   return 0;
+}
