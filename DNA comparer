@@ -1,0 +1,80 @@
+/*
+    Bryan Johnson
+    Final Exam 361
+    Jay Morris
+    12/5/2020
+*/
+#include<iostream>
+#include<algorithm>
+#include<bits/stdc++.h>
+#include<cstdlib>
+#include<math.h>
+using namespace std;
+
+//This questions commputaitonal completixity is O(MxN)
+
+void highestDNA(vector<string> dna1,vector<string> dna2){
+     
+        pair<string,string> res;
+        
+	int highest = 0;
+        
+		for(auto i = dna1.begin();i != dna1.end();i++)
+		{
+                
+			for(auto j = dna2.begin();j!=dna2.end();j++)
+			{
+                        		                        
+				if((*i).at(0) == (*j).at(0))
+				        {
+                                
+				//stoi is used to convert string to integer http://www.cplusplus.com/reference/string/stoi/
+
+                                int val1 = stoi((*i).substr(1));
+
+                                int val2 = stoi((*j).substr(1));
+
+                                if((1000 - (labs(val1-val2)))/10 > highest)
+				                {
+                                        highest = (1000 - (labs(val1-val2)))/10.0;
+                                        res = make_pair(*i,*j);
+                                }
+                        }
+                }
+        }
+
+        cout<<"The highest DNA sequence is : "<<res.first<<" and "<<res.second<<endl;
+
+        cout<<"The DNA value is : "<<highest;
+}
+int main(){
+       
+        int N,M;
+
+        vector<string> dna1,dna2;
+
+        cout<<"Please enter the value of M :";
+        cin>>M;
+
+        cout<<"Please enter the value of N:";
+        cin>>N;
+
+        cout<<"Enter the first list of DNA's :";
+
+      
+        for(int i = 0;i<M;i++)
+	{
+                string val;
+                cin>>val;
+                dna1.push_back(val);
+        }
+        cout<<"Enter the secound list of DNA's :";
+        for(int i = 0;i<N;i++)
+	{
+                string val;
+                cin>>val;
+                dna2.push_back(val);
+        }
+        
+        highestDNA(dna1,dna2);
+        return 0;
