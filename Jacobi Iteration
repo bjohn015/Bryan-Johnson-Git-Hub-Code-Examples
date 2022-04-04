@@ -1,9 +1,3 @@
-/*
-    Jacboi Iteration SOLVER
-    C++
-    CS 417 Jay Morris
-    Bryan Johnson
-*/
 #include<iostream>
 #include <iostream>
 #include <fstream>
