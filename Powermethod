@@ -1,9 +1,4 @@
-/*
-    Power method for domaint eigenvalue SOLVER
-    C++
-    CS 417 Jay Morris
-    Bryan Johnson
-*/
+
 #include<stdio.h>
 #include<conio.h>
 #include<math.h>
