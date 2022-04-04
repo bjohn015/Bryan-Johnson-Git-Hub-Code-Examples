@@ -1,7 +1,6 @@
 import time
 import random
 
-
 class ExecutionTime:
     def __init__(self):
         self.start_time = time.time()
